@@ -1,0 +1,11 @@
+docker buildx build --platform linux/amd64 -t otd-ui-dev:latest . --load
+
+docker run -d -p 3000:3000 --name my-nextjs-container otd-ui-dev:latest
+
+
+docker tag otd-ui-dev:latest acrotddev.azurecr.io/otd-ui-dev:latest
+docker tag otd-ui-dev:latest acrotddev.azurecr.io/otd-ui-dev:0.1.0
+
+
+docker push acrotddev.azurecr.io/otd-ui-dev:latest
+docker push acrotddev.azurecr.io/otd-ui-dev:0.1.0

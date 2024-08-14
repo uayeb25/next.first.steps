@@ -1,13 +1,13 @@
 'use client';
 
-import { GetCardItem , DeleteCardItem, UpdateCardItem } from "../../../services/nextcard";
+import { GetCardItem , DeleteCardItem, UpdateCardItem } from "@/services/nextcard";
 
-import DeleteConfirmation from "../../../components/DeleteConfirmation";
+import DeleteConfirmation from "@/components/DeleteConfirmation";
 
-import InformationNotification from "../../../components/InformationNotification";
+import InformationNotification from "@/components/InformationNotification";
 import SuccessNotification from "@/components/SuccessNotification";
 
-import FormCard from "../../../components/FormCard";
+import FormCard from "@/components/FormCard";
 
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';

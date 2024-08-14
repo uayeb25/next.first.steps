@@ -30,6 +30,6 @@ export default function SuccessNotification({
             </div>
         </div>)}
     </>
-    
+
   )
 }
