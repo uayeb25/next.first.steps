@@ -79,6 +79,7 @@ export default function Home() {
         {data.map( (card) => (
 
           <NextCard
+            key={card.id}
             id={card.id}
             title={card.title}
             description={card.description}

@@ -1,5 +1,5 @@
 const settings = {
-    domain: process.env.NEXT_PUBLIC_API_DOMAIN
+    domain: "https://api-otd-dev.azurewebsites.net"
 };
 
 export default settings;
