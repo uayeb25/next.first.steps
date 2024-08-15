@@ -17,8 +17,8 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [isLogin, setIsLogin] = useState(true);
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -58,6 +58,7 @@ export default function RootLayout({ children }) {
 
         { !isLogin && !isSignUp && (<HeaderApp
           username={username}
+          mainmenu={true}
         />)}
 
         {children}

@@ -1,16 +1,18 @@
 'use client';
 
-import { GetCardItem , DeleteCardItem, UpdateCardItem } from "@/services/nextcard";
+import { useEffect, useState } from "react";
+
+
 
 import DeleteConfirmation from "@/components/DeleteConfirmation";
-
 import InformationNotification from "@/components/InformationNotification";
 import SuccessNotification from "@/components/SuccessNotification";
-
 import FormCard from "@/components/FormCard";
 
-import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
+import { GetCardItem , DeleteCardItem, UpdateCardItem } from "@/services/nextcard";
+import { GetUserInfo } from "@/services/users";
+import { useRouter } from "next/navigation";
+import { EvaluateResponse } from "@/utils/requestEvaluator";
 
 export default function CardItem(props){
 
@@ -25,10 +27,7 @@ export default function CardItem(props){
     const [ openInformation, setOpenInformation ] = useState(false);
     const [ openSuccess, setOpenSuccess ] = useState(false);
 
-
     const [informationMessage, setInformationMessage] = useState('');
-
-
 
     const handleDeleteClick = (e) => {
         e.preventDefault();
@@ -87,7 +86,7 @@ export default function CardItem(props){
                     setOpen(false);
                     return;
                 }else{
-                    router.push('/nextclient');
+                    router.push('/');
                 }
             });
     }
@@ -111,24 +110,29 @@ export default function CardItem(props){
 
     //////////////////////
 
-
     useEffect(() => {
-
-        GetCardItem(id).then( (response) => {
-
-            if( response.status == 404 || response.status == 422 ){
-                router.push('/404');
-            }
-
-            setTitle( response.title );
-            setDescription( response.description );
+        const fetchData = async () => {
+          try {
+            const userInfo = await GetUserInfo();
+            const cardData = await GetCardItem(id);
+            console.log(cardData);
+            setTitle( cardData.title );
+            setDescription( cardData.description );
             setLoading(false);
+          } catch (error) {
+            const evaluatedResponse = EvaluateResponse(error);
+            if (evaluatedResponse !== "") {
+              router.push(evaluatedResponse);
+            }
+          } finally {
+            setLoading(false);
+          }
+        };
 
-        });
+        fetchData();
+      }, [router, id]);
 
-    } , [id]);
-
-    return(
+   return(
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
 
             <DeleteConfirmation 

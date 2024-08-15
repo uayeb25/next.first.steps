@@ -3,12 +3,12 @@ import { HTTPError } from "@/utils/HttpError";
 
 export async function GetCard() {
 
-    const response = await fetch(`${ settings.domain }/cards?cache-bust=${new Date().getTime()}`,{
+    const response = await fetch(`${ settings.domain }/cards`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-            , 'Cache-Control': 'no-cache'
             , 'Authorization': `Bearer ${localStorage.getItem('token')}`
+            , 'Cache-Control': 'no-cache'
         }
     });
 
@@ -89,8 +89,8 @@ export async function CreateCardItem(title, description) {
         body: JSON.stringify({ title, description }),
         headers: {
             'Content-Type': 'application/json'
-            , 'Cache-Control': 'no-cache'
             , 'Authorization': `Bearer ${localStorage.getItem('token')}`
+            , 'Cache-Control': 'no-cache'
         }
     });
 

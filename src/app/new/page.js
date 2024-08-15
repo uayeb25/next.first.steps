@@ -1,13 +1,14 @@
 'use client';
 
-import { CreateCardItem } from "../../../services/nextcard";
-
-
-import InformationNotification from "../../../components/InformationNotification";
-import FormCard from "../../../components/FormCard";
-
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
+
+import { CreateCardItem } from "@/services/nextcard";
+import InformationNotification from "@/components/InformationNotification";
+import FormCard from "@/components/FormCard";
+
+import { GetUserInfo } from "@/services/users";
+import { useRouter } from "next/navigation";
+import { EvaluateResponse } from "@/utils/requestEvaluator";
 
 export default function CardCreteItem(props){
 
@@ -20,6 +21,21 @@ export default function CardCreteItem(props){
 
     const [ openInformation, setOpenInformation ] = useState(false);
     const [informationMessage, setInformationMessage] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const userInfo = await GetUserInfo();
+          } catch (error) {
+            const evaluatedResponse = EvaluateResponse(error);
+            if (evaluatedResponse !== "") {
+              router.push(evaluatedResponse);
+            }
+          }
+        };
+
+        fetchData();
+    }, [router]);
 
 
     const handleCreateClick = (e) => {
@@ -70,7 +86,7 @@ export default function CardCreteItem(props){
                 setInformationMessage('Error with API call server communication');
                 return;
             }else{
-                router.push('/nextclient');
+                router.push('/');
                 setLoading(false);
             }
         });

@@ -1,26 +1,41 @@
 'use client';
-
-import HeaderApp from "@/components/HeaderApp";
-import CardApp from "@/components/CardApp";
-
-import NextCard from "@/components/NextCard";
-import { GetCard } from "@/services/nextcard";
 import { useEffect, useState } from "react";
 
+import CardApp from "@/components/CardApp";
+import { GetCard } from "@/services/nextcard";
+
+
+import { GetUserInfo } from "@/services/users";
+import { useRouter } from "next/navigation";
+import { EvaluateResponse } from "@/utils/requestEvaluator";
+
+
+
 export default function Home() {
-  
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userInfo = await GetUserInfo();
+        const cardData = await GetCard();
+        setData(cardData);
+      } catch (error) {
+        const evaluatedResponse = EvaluateResponse(error);
+        if (evaluatedResponse !== "") {
+          router.push(evaluatedResponse);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    GetCard().then( (data) => {
-      setData(data);
-      setLoading(false);
-    });
-
-  }
-  , []);
+    fetchData();
+  }, [router]);
 
   return (
     <>
@@ -29,10 +44,12 @@ export default function Home() {
 
           { data.map( (card) => (<CardApp
             key={ card.id }
+            cardid={ card.id }
             title={ card.title }
-            date="2024-01-01"
+            date={ card.updated_at }
             description={ card.description }
-            author={"Uayeb Caballero"}
+            author={ card.author }
+            access={ card.access }
           />))}
 
         </ul>
