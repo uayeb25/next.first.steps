@@ -9,7 +9,7 @@ import InformationNotification from "@/components/InformationNotification";
 import SuccessNotification from "@/components/SuccessNotification";
 import FormCard from "@/components/FormCard";
 
-import { GetCardItem , DeleteCardItem, UpdateCardItem } from "@/services/nextcard";
+import { GetCardItem , DeleteCardItem, UpdateCardItem, CardUploadFile } from "@/services/nextcard";
 import { GetUserInfo } from "@/services/users";
 import { useRouter } from "next/navigation";
 import { EvaluateResponse } from "@/utils/requestEvaluator";
@@ -21,6 +21,7 @@ export default function CardItem(props){
 
     const [ title, setTitle ] = useState('');
     const [ description, setDescription ] = useState('');
+    const [ files, setFiles ] = useState([]);
     const [ loading, setLoading ] = useState(true);
 
     const [ open, setOpen ] = useState(false);
@@ -57,7 +58,9 @@ export default function CardItem(props){
         setDescription(e.target.value);
     }
 
-
+    const UpdateFiles = (files) => {
+        setFiles(files);
+    }
 
     //// API ERROR HANDLING ///
 
@@ -95,14 +98,30 @@ export default function CardItem(props){
     const updateAction = () => {
 
             UpdateCardItem(id, title, description).then( (response) => {
-                if( response.status != 200 ){
-                    setOpenInformation(true);
-                    setInformationMessage('Error with API call server communication');
-                    return;
-                }else{
+                if ( files.length === 0 ){
                     setOpenSuccess(true);
                     setLoading(false);
+                }else{
+
+                    setOpenInformation(true);
+                    setInformationMessage('Uploading files to server please dont close the window');
+
+                    CardUploadFile(id, files).then( (response2) => {
+                        setOpenInformation(false);
+                        setOpenSuccess(true);
+                        setLoading(false);
+                        setFiles([]);
+                    }).catch( (error) => {
+                        setOpenInformation(true);
+                        setInformationMessage('Error with API call server communication');
+                        setLoading(false);
+                    });
+
                 }
+            }).catch( (error) => {
+                setOpenInformation(true);
+                setInformationMessage('Error with API call server communication');
+                setLoading(false);
             });
 
     }
@@ -165,12 +184,14 @@ export default function CardItem(props){
                     </div>
 
                     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                        <FormCard 
+                        <FormCard
 
                             title={ title }
                             description={ description }
+                            files={ files }
                             UpdateTitle={ UpdateTitle }
                             UpdateDescription={ UpdateDescription }
+                            UpdateFiles={ UpdateFiles }
 
                             handleDeleteClick={ handleDeleteClick }
                             handleUpdateClick={ handleUpdateClick }

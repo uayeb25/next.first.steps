@@ -1,3 +1,6 @@
+import {  useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+
 function noop() {}
 
 export default function FormCard({
@@ -6,6 +9,8 @@ export default function FormCard({
     , UpdateTitle
     , description
     , UpdateDescription
+    , files = []
+    , UpdateFiles = noop
 
     , loading
 
@@ -16,6 +21,13 @@ export default function FormCard({
     , isCreating = true
 
 }) {
+
+    const onDrop = useCallback((acceptedFiles) => {
+        UpdateFiles(acceptedFiles);
+    }, [UpdateFiles]);
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
     return(
         <form className="space-y-6">
             <div>
@@ -50,11 +62,25 @@ export default function FormCard({
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         defaultValue={''}
                         value={ description }
-                        onChange={ UpdateDescription }  
+                        onChange={ UpdateDescription }
                         disabled={ loading }
                     />
                 </div>
             </div>
+
+            { !isCreating && (<>
+                <div {...getRootProps()} className="mt-4 flex justify-center rounded-md border-2 border-dashed border-gray-300 p-4 text-center">
+                    <input {...getInputProps()} />
+                    <p className="text-sm text-gray-600">Drag & drop some files here, or click to select files</p>
+                </div>
+                <div className="mt-2">
+                    {files.map((file) => (
+                        <p key={file.path} className="text-sm text-gray-600">
+                        {file.path} - {file.size} bytes
+                        </p>
+                    ))}
+                </div>
+            </>)}
 
             { isCreating && (<div>
                 <button

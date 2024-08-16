@@ -6,8 +6,8 @@ az login
 az acr login --name acrotddev
 
 docker tag otd-ui-dev:latest acrotddev.azurecr.io/otd-ui-dev:latest
-docker tag otd-ui-dev:latest acrotddev.azurecr.io/otd-ui-dev:0.1.5
+docker tag otd-ui-dev:latest acrotddev.azurecr.io/otd-ui-dev:0.1.10
 
 
 docker push acrotddev.azurecr.io/otd-ui-dev:latest
-docker push acrotddev.azurecr.io/otd-ui-dev:0.1.5
+docker push acrotddev.azurecr.io/otd-ui-dev:0.1.10

@@ -41,6 +41,25 @@ export async function GetCardItem(id) {
 
 };
 
+export async function GetCardItemFiles(id) {
+
+    const response = await fetch(`${ settings.domain }/cards/${id}/files`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+            , 'Cache-Control': 'no-cache'
+            , 'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    if (!response.ok)
+        throw new HTTPError(response);
+    else
+        return response.json();
+
+
+};
+
 export async function DeleteCardItem(id) {
 
     const response = await fetch(`${ settings.domain }/cards/${id}`,{
@@ -101,3 +120,26 @@ export async function CreateCardItem(title, description) {
 
 
 };
+
+export async function CardUploadFile( id, files ){
+
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await fetch(`${ settings.domain }/cards/${id}/files`,{
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            , 'Cache-Control': 'no-cache'
+        }
+    });
+
+    if (!response.ok)
+        throw new HTTPError(response);
+    else
+        return response.json();
+
+}

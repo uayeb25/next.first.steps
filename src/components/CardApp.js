@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Link } from "next/link";
 
 export default function CardApp({
-    key, title, description, author, date, access, cardid
+    key, title, description, author, date, access, cardid, totalfiles, openFileMenu
 }) {
     const router = useRouter();
     return (
@@ -51,6 +51,22 @@ export default function CardApp({
               <dt className="text-gray-500">Author</dt>
               <dd className="text-gray-700">
                 <div className="font-medium text-gray-900">{author}</div>
+              </dd>
+            </div>
+            <div className="flex justify-between items-center gap-x-4 py-3">
+              <dt className="text-gray-500">Total Files</dt>
+              <dd className="flex items-center text-gray-700">
+                <div className="font-medium text-gray-900 mr-2">{totalfiles}</div>
+                {totalfiles > 0 ? (
+                  <button
+                    onClick={ () => openFileMenu(cardid) }
+                    className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-3 py-1 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                  >
+                    View Files
+                  </button>
+                ) : (
+                  <span className="text-gray-500">No files available</span>
+                )}
               </dd>
             </div>
           </dl>
